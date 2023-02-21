@@ -10,13 +10,26 @@ const getProducto = asyncHandler(async (req, res) => {
 })
 
 const setProducto = asyncHandler(async (req, res) => {
-    if (!req.body.texto) {
+    if (
+        !req.body.nombre | 
+        !req.body.descripcion | 
+        !req.body.precio | 
+        !req.body.categoria | 
+        !req.body.sku | 
+        !req.body.marca | 
+        !req.body.modelo) {
         res.status(400)
-        throw new Error('Por favor teclea una descripción del producto')
+        throw new Error('Por favor complete los detalles del producto')
     }
 
     const producto = await Producto.create({
-        texto: req.body.texto,
+        nombre: req.body.nombre,
+        descripcion: req.body.descripcion,
+        precio: req.body.precio,
+        categoria: req.body.categoria,
+        sku: req.body.sku,
+        marca: req.body.marca,
+        modelo: req.body.modelo,
         // user: req.user.id
     })
 
@@ -61,7 +74,7 @@ const deleteProducto = asyncHandler(async (req, res) => {
     //const deletedTarea = await Tarea.findByIdAndDelete(req.params.id)
     await producto.remove()
 
-    res.status(200).json(req.params.id)
+    res.status(200).json('Producto: ' + req.params.id + ' eliminado')
 })
 
 module.exports = {
