@@ -10,14 +10,10 @@ const getProducto = asyncHandler(async (req, res) => {
 })
 
 const setProducto = asyncHandler(async (req, res) => {
-    if (
-        !req.body.nombre | 
-        !req.body.descripcion | 
-        !req.body.precio | 
-        !req.body.categoria | 
-        !req.body.sku | 
-        !req.body.marca | 
-        !req.body.modelo) {
+
+    const { nombre, descripcion, precio, categoria, sku, marca, modelo} = req.body
+
+    if (!nombre || !descripcion || !precio || !categoria || !sku || !marca || !modelo) {
         res.status(400)
         throw new Error('Por favor complete los detalles del producto')
     }
