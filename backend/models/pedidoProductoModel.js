@@ -17,7 +17,6 @@ const pedidoProductoSchema = mongoose.Schema({
     },
     precio: {
         type: Number,
-        required: [true, 'Por favor teclea el precio']
     },
     importe: {
         type: Number,

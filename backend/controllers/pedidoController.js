@@ -3,19 +3,30 @@ const asyncHandler = require('express-async-handler')
 const Pedido = require('../models/pedidoModel')
 
 const getPedido = asyncHandler(async (req, res) => {
-    // const producto = await Producto.find({ user: req.user.id })
-    const pedido = await Pedido.find()
-
-    res.status(200).json(pedido)
+    const { permisos } = req.user
+   
+    if (permisos == true) {
+        const pedido = await Pedido.find()
+        res.status(200).json(pedido)
+    } else {
+        const pedido = await Pedido.find({id_cliente:req.user.id})
+        res.status(200).json(pedido)
+    }
 })
 
 const setPedido = asyncHandler(async (req, res) => {
-
     const { fecha, estaEnviado } = req.body
 
     if (!fecha || !estaEnviado ) {
         res.status(400)
-        throw new Error('Por favor complete los detalles del pedido')
+        throw new Error(`Por favor complete los detalles `)
+    }
+
+    // verificamos que el user de la tarea sea igual al user del token
+    const { esCliente} = req.user
+    if (esCliente == false) {
+        res.status(401)
+        throw new Error('Acceso no Autorizado')
     }
 
     const pedido = await Pedido.create({
@@ -38,7 +49,8 @@ const updatePedido = asyncHandler(async (req, res) => {
     }
 
     // verificamos que el user de la tarea sea igual al user del token
-    if (pedido.user.toString() !== req.user.id) {
+    const { permisos } = req.user
+    if (permisos == false) {
         res.status(401)
         throw new Error('Acceso no Autorizado')
     }
@@ -58,7 +70,8 @@ const deletePedido = asyncHandler(async (req, res) => {
     }
 
     //verificamos que el user de la tarea sea igual al user del token
-    if (pedido.user.toString() !== req.user.id) {
+    const { permisos } = req.user
+    if (permisos == false) {
         res.status(401)
         throw new Error('Acceso no Autorizado')
     }

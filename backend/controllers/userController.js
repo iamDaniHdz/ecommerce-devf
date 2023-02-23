@@ -6,9 +6,9 @@ const User = require('../models/userModel')
 
 const registrarUser = asyncHandler(async (req, res) => {
 
-    const { name, email, password } = req.body
+    const { name, email, password, permisos, esCliente} = req.body
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !permisos || !esCliente) {
         res.status(400)
         throw new Error('Faltan datos, favor de verificar')
     }
@@ -26,14 +26,18 @@ const registrarUser = asyncHandler(async (req, res) => {
     const user = await User.create({
         name,
         email,
-        password: hashedPassword
+        password: hashedPassword,
+        permisos,
+        esCliente
     })
 
     if (user) {
         res.status(201).json({
             _id: user.id,
             name: user.name,
-            email: user.email
+            email: user.email,
+            permisos: user.permisos,
+            esCliente: user.esCliente
         })
     } else {
         res.status(400)
@@ -51,6 +55,8 @@ const loginUser = asyncHandler(async (req, res) => {
             _id: user.id,
             name: user.name,
             email: user.email,
+            permisos: user.permisos,
+            esCliente: user.esCliente,
             token: generateToken(user._id)
         })
     } else {
@@ -67,13 +73,15 @@ const generateToken = (id) => {
 }
 
 const dataUser = asyncHandler(async (req, res) => {
-    // const { _id, name, email } = req.user
-
-    // res.status(200).json({
-    //     id: _id,
-    //     name,
-    //     email
-    // })
+    const { email } = req.user
+    const user = await User.findOne({ email })
+    res.status(200).json({
+        _id: user.id,
+        name: user.name,
+        email: user.email,
+        permisos: user.permisos,
+        esCliente: user.esCliente
+    })
 })
 
 module.exports = {

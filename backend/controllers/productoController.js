@@ -18,6 +18,19 @@ const setProducto = asyncHandler(async (req, res) => {
         throw new Error('Por favor complete los detalles del producto')
     }
 
+    // // verificamos que el user de la tarea sea igual al user del token
+    // const { id } = req.user
+    // if (!id == req.user.id) {
+    //     res.status(401)
+    //     throw new Error('Acceso no Autorizado')
+    // }
+
+    const { permisos } = req.user
+    if (permisos == false) {
+        res.status(401)
+        throw new Error('Acceso no Autorizado')
+    }
+
     const producto = await Producto.create({
         nombre: req.body.nombre,
         descripcion: req.body.descripcion,
@@ -26,7 +39,6 @@ const setProducto = asyncHandler(async (req, res) => {
         sku: req.body.sku,
         marca: req.body.marca,
         modelo: req.body.modelo,
-        // user: req.user.id
     })
 
     res.status(201).json(producto)
@@ -42,10 +54,11 @@ const updateProducto = asyncHandler(async (req, res) => {
     }
 
     //verificamos que el user de la tarea sea igual al user del token
-    // if (tarea.user.toString() !== req.user.id) {
-    //     res.status(401)
-    //     throw new Error('Acceso no Autorizado')
-    // }
+    const { permisos } = req.user
+    if (permisos == false) {
+        res.status(401)
+        throw new Error('Acceso no Autorizado')
+    }
 
     const updatedProducto = await Producto.findByIdAndUpdate(req.params.id, req.body, { new: true })
 
@@ -62,12 +75,12 @@ const deleteProducto = asyncHandler(async (req, res) => {
     }
 
     //verificamos que el user de la tarea sea igual al user del token
-    // if (tarea.user.toString() !== req.user.id) {
-    //     res.status(401)
-    //     throw new Error('Acceso no Autorizado')
-    // }
+    const { permisos } = req.user
+    if (permisos == false) {
+        res.status(401)
+        throw new Error('Acceso no Autorizado')
+    }
 
-    //const deletedTarea = await Tarea.findByIdAndDelete(req.params.id)
     await producto.remove()
 
     res.status(200).json('Producto: ' + req.params.id + ' eliminado')

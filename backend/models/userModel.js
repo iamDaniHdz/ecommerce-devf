@@ -13,6 +13,14 @@ const userSchema = mongoose.Schema({
     password: {
         type: String,
         required: [true, 'Por favor teclea un password']
+    },
+    esCliente:{
+        type: Boolean,
+        required: [true, 'Por favor teclea true o false']
+    },
+    permisos:{
+        type: Boolean,
+        required: [true, 'Por favor teclea true o false']
     }
 },
     {
