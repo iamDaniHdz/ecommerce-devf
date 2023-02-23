@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler')
 
 const PedidoProducto = require('../models/pedidoProductoModel')
+const Producto = require('../models/productoModel')
 
 const getPedidoProducto = asyncHandler(async (req, res) => {
     // const pedidoProducto = await PedidoProducto.find({ user: req.user.id })
@@ -11,13 +12,12 @@ const getPedidoProducto = asyncHandler(async (req, res) => {
 
 const setPedidoProducto = asyncHandler(async (req, res) => {
 
-    const { id_pedido, id_producto, cantidad, precio} = req.body
+    const { id_pedido, id_producto, cantidad } = req.body
 
     if ( !id_pedido || !id_producto || !cantidad ) {
         res.status(400)
         throw new Error('Por favor complete los detalles del producto')
     }
-
     // verificamos que el user de la tarea sea igual al user del token
     const { permisos } = req.user
     if (permisos == false) {
@@ -25,21 +25,17 @@ const setPedidoProducto = asyncHandler(async (req, res) => {
         throw new Error('Acceso no Autorizado')
     }
 
+    const producto = await Producto.findById(id_producto)
+
     const pedidoProducto = await PedidoProducto.create({
-        // id_pedido: req.pedido.id,
-        // id_producto: req.producto.id,
-        // cantidad: req.body.cantidad,
-        // precio: req.body.precio,
-        // importe: req.body.importe
         id_pedido,
         id_producto,
         cantidad,
-        precio,
-        importe: cantidad * precio
+        precio: producto.precio,
+        importe: cantidad * producto.precio
     })
-    // const precio = await PedidoProducto.find(req.params.precio)
-
     res.status(201).json(pedidoProducto)
+    
 })
 
 const updatePedidoProducto = asyncHandler(async (req, res) => {
