@@ -19,7 +19,7 @@ const setPedido = asyncHandler(async (req, res) => {
     }
 
     const pedido = await Pedido.create({
-        user: req.user.id,
+        id_cliente: req.user.id,
         fecha: req.body.fecha,
         estaPagado: req.body.estaPagado,
         estaEnviado: req.body.estaEnviado,

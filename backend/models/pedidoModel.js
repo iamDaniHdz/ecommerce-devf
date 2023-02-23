@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const pedidoSchema = mongoose.Schema({
-    user: {
+    id_cliente: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'User'
