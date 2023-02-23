@@ -50,6 +50,7 @@ const loginUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body
 
     const user = await User.findOne({ email })
+    
     if (user && (await bcrypt.compare(password, user.password))) {
         res.json({
             _id: user.id,
@@ -63,7 +64,6 @@ const loginUser = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error('Credenciales incorrectas')
     }
-
 })
 
 const generateToken = (id) => {

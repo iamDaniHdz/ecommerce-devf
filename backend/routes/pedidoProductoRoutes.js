@@ -4,9 +4,6 @@ const { getPedidoProducto, setPedidoProducto, updatePedidoProducto, deletePedido
 
 const { protect } = require('../middleware/authMiddleware')
 
-// router.route('/').get(protect, getPedidoProducto).post(protect, setPedidoProducto)
-// router.route('/:id').delete(protect, deletePedidoProducto).put(protect, updatePedidoProducto)
-
 router.route('/').get(protect, getPedidoProducto).post(protect, setPedidoProducto)
 router.route('/:id').delete(protect, deletePedidoProducto).put(protect, updatePedidoProducto)
 

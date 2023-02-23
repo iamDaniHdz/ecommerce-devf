@@ -20,7 +20,6 @@ const pedidoProductoSchema = mongoose.Schema({
     },
     importe: {
         type: Number,
-        // required: [true, 'Por favor teclea el total']
     }
 },
     {

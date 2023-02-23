@@ -5,6 +5,7 @@ const Pedido = require('../models/pedidoModel')
 const getPedido = asyncHandler(async (req, res) => {
     const { permisos } = req.user
    
+    // Acceder a GET si el usuario tiene permisos
     if (permisos == true) {
         const pedido = await Pedido.find()
         res.status(200).json(pedido)
@@ -15,14 +16,14 @@ const getPedido = asyncHandler(async (req, res) => {
 })
 
 const setPedido = asyncHandler(async (req, res) => {
-    const { fecha, estaEnviado } = req.body
+    const { fecha, estaPagado, estaEnviado, } = req.body
 
-    if (!fecha || !estaEnviado ) {
+    if (!fecha || !estaPagado || !estaEnviado) {
         res.status(400)
         throw new Error(`Por favor complete los detalles `)
     }
 
-    // verificamos que el user de la tarea sea igual al user del token
+    // Acceder a POST si el usuario tiene permisos
     const { esCliente} = req.user
     if (esCliente == false) {
         res.status(401)
@@ -31,16 +32,15 @@ const setPedido = asyncHandler(async (req, res) => {
 
     const pedido = await Pedido.create({
         id_cliente: req.user.id,
-        fecha: req.body.fecha,
-        estaPagado: req.body.estaPagado,
-        estaEnviado: req.body.estaEnviado,
+        fecha,
+        estaPagado,
+        estaEnviado,
     })
 
     res.status(201).json(pedido)
 })
 
 const updatePedido = asyncHandler(async (req, res) => {
-
     const pedido = await Pedido.findById(req.params.id)
 
     if (!pedido) {
@@ -48,7 +48,7 @@ const updatePedido = asyncHandler(async (req, res) => {
         throw new Error('Pedido no encontrado')
     }
 
-    // verificamos que el user de la tarea sea igual al user del token
+    // Acceder a PUT si el usuario tiene permisos
     const { permisos } = req.user
     if (permisos == false) {
         res.status(401)
@@ -56,12 +56,10 @@ const updatePedido = asyncHandler(async (req, res) => {
     }
 
     const updatedPedido = await Pedido.findByIdAndUpdate(req.params.id, req.body, { new: true })
-
     res.status(200).json(updatedPedido)
 })
 
 const deletePedido = asyncHandler(async (req, res) => {
-
     const pedido = await Pedido.findById(req.params.id)
 
     if (!pedido) {
@@ -69,16 +67,14 @@ const deletePedido = asyncHandler(async (req, res) => {
         throw new Error('Pedido no encontrado')
     }
 
-    //verificamos que el user de la tarea sea igual al user del token
+    // Acceder a DELETE si el usuario tiene permisos
     const { permisos } = req.user
     if (permisos == false) {
         res.status(401)
         throw new Error('Acceso no Autorizado')
     }
 
-    //const deletedTarea = await Tarea.findByIdAndDelete(req.params.id)
     await pedido.remove()
-
     res.status(200).json('Pedido: ' + req.params.id + ' eliminado')
 })
 

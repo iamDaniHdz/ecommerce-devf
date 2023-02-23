@@ -4,26 +4,27 @@ const PedidoProducto = require('../models/pedidoProductoModel')
 const Producto = require('../models/productoModel')
 
 const getPedidoProducto = asyncHandler(async (req, res) => {
-    // const pedidoProducto = await PedidoProducto.find({ user: req.user.id })
     const { permisos } = req.user
+    
+    // Acceder a GET si el usuario tiene permisos
     if (permisos == false) {
         res.status(401)
         throw new Error('Acceso no Autorizado')
     }
-    const pedidoProducto = await PedidoProducto.find()
 
+    const pedidoProducto = await PedidoProducto.find()
     res.status(200).json(pedidoProducto)
 })
 
 const setPedidoProducto = asyncHandler(async (req, res) => {
-
     const { id_pedido, id_producto, cantidad } = req.body
 
     if ( !id_pedido || !id_producto || !cantidad ) {
         res.status(400)
         throw new Error('Por favor complete los detalles del producto')
     }
-    // verificamos que el user de la tarea sea igual al user del token
+
+    // Acceder a POST si el usuario tiene permisos
     const { permisos } = req.user
     if (permisos == false) {
         res.status(401)
@@ -39,12 +40,11 @@ const setPedidoProducto = asyncHandler(async (req, res) => {
         precio: producto.precio,
         importe: cantidad * producto.precio
     })
+
     res.status(201).json(pedidoProducto)
-    
 })
 
 const updatePedidoProducto = asyncHandler(async (req, res) => {
-
     const pedidoProducto = await PedidoProducto.findById(req.params.id)
 
     if (!pedidoProducto) {
@@ -52,7 +52,7 @@ const updatePedidoProducto = asyncHandler(async (req, res) => {
         throw new Error('PedidoProducto no encontrado')
     }
 
-    //verificamos que el user de la tarea sea igual al user del token
+    // Acceder a PUT si el usuario tiene permisos
     const { permisos } = req.user
     if (permisos == false) {
         res.status(401)
