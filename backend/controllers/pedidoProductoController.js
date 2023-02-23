@@ -5,6 +5,11 @@ const Producto = require('../models/productoModel')
 
 const getPedidoProducto = asyncHandler(async (req, res) => {
     // const pedidoProducto = await PedidoProducto.find({ user: req.user.id })
+    const { permisos } = req.user
+    if (permisos == false) {
+        res.status(401)
+        throw new Error('Acceso no Autorizado')
+    }
     const pedidoProducto = await PedidoProducto.find()
 
     res.status(200).json(pedidoProducto)

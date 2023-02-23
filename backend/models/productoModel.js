@@ -24,7 +24,8 @@ const productoSchema = mongoose.Schema({
     },
     sku: {
         type: String,
-        required: [true, 'Por favor teclea el SKU del producto']
+        required: [true, 'Por favor teclea el SKU del producto'],
+        unique: true
     },
     marca: {
         type: String,
